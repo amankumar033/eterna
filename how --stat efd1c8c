@@ -1,0 +1,27 @@
+[33mefd1c8c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m style: add white background and gray-800 text on filter button hover - TokenTableFilters component with status filter buttons that show white background and gray-800 text on hover, selected state maintains white bg with smooth scale and lift animations
+[33m6e67afd[m style: enhance table row hover density and container shadow - TokenRow component with increased hover background opacity (muted/60) and border visibility, TokenTable container with hover shadow enhancement for better visual feedback
+[33mf307bc1[m style: update filter buttons with white selected state and smooth hover lift animations - TokenTableFilters component with status filter buttons (All, New Pairs, Final Stretch, Migrated) that scale up and lift on hover, selected state uses white background with gray-800 text
+[33ma80ab10[m style: add smooth hover lift effect and black active state to filter buttons
+[33mc0faf74[m docs: add token images directory with README instructions
+[33m2dea9e3[m docs: add comprehensive README with project documentation
+[33mf72bda8[m deps: add required dependencies for Redux, React Query, and Radix UI
+[33m2558f13[m feat: add skeleton loading component for token table
+[33mf34f0a7[m feat: add base UI components (table, input, skeleton, dialog)
+[33m6853409[m feat: add error boundary component for graceful error handling
+[33m4c79899[m feat: add utility functions, providers, and store configuration
+[33m0d3dce4[m feat: add custom hooks for token data, WebSocket, and sorting
+[33m9d2c6d0[m feat: implement Redux store with token table slice for state management
+[33m06910c8[m config: add image optimization settings for external token images
+[33mbdb5f77[m feat: add Redux, React Query, and Tooltip providers to root layout
+[33m72834b5[m feat: redirect home page to pulse page by default
+[33macbe128[m style: improve popover and tooltip animations for smoother transitions
+[33me7e2065[m style: improve table header cell hover effects
+[33m1a3bbff[m style: soften page header and improve spacing for better UX
+[33m524265d[m style: improve table row animations to originate from cells
+[33m1287ff8[m feat: integrate CoinGecko API for real token images
+[33m5a9eca4[m fix: remove cursor pointer from non-clickable price and liquidity cells
+[33mde2e8a5[m style: improve filter button hover effects with softer transitions
+[33m65cec5b[m style: soften button transitions and hover effects
+[33ma5af167[m style: improve global animations and transitions for smoother UX
+[33m5fd8505[m feat: add TypeScript types for token data and table state
+[33m7893697[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m Initial commit from Create Next App
