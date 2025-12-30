@@ -123,7 +123,7 @@ export const TokenTable = memo(function TokenTable({
 
   return (
     <div className={className}>
-      <div className="rounded-lg border border-border/30 bg-card shadow-sm overflow-hidden">
+      <div className="rounded-lg border border-border/30 bg-card shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-md">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>

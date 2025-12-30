@@ -30,8 +30,8 @@ export const TokenRow = memo(function TokenRow({
   return (
     <TableRow 
       className={cn(
-        "group border-b border-border/20 transition-all duration-200 ease-out",
-        "hover:bg-muted/30 hover:border-border/40",
+        "group border-b border-border/20 transition-all duration-300 ease-out",
+        "hover:bg-muted/60 hover:border-border/50 hover:shadow-sm",
         "animate-fade-in",
         index % 2 === 0 && "bg-muted/5"
       )}
