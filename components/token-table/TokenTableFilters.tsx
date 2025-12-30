@@ -80,7 +80,7 @@ export const TokenTableFilters = memo(function TokenTableFilters() {
               "transition-all duration-300 ease-out text-xs sm:text-sm h-10 px-4 font-medium cursor-pointer",
               "hover:scale-105 hover:shadow-md hover:-translate-y-0.5 active:scale-100 active:translate-y-0",
               statusFilter === filter.value 
-                ? "bg-black dark:bg-white text-white dark:text-black shadow-lg scale-105" 
+                ? "bg-white dark:bg-white text-gray-800 dark:text-gray-800 shadow-md font-semibold" 
                 : "bg-background border-border/40 hover:bg-muted/60 hover:border-border/60"
             )}
           >
