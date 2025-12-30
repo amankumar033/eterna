@@ -78,10 +78,10 @@ export const TokenTableFilters = memo(function TokenTableFilters() {
             onClick={() => handleStatusFilter(filter.value)}
             className={cn(
               "transition-all duration-300 ease-out text-xs sm:text-sm h-10 px-4 font-medium cursor-pointer",
-              "hover:scale-105 hover:shadow-md hover:-translate-y-0.5 active:scale-100 active:translate-y-0",
+              "hover:scale-105 hover:shadow-md hover:-translate-y-0.5 hover:bg-white hover:text-gray-800 active:scale-100 active:translate-y-0",
               statusFilter === filter.value 
                 ? "bg-white dark:bg-white text-gray-800 dark:text-gray-800 shadow-md font-semibold" 
-                : "bg-background border-border/40 hover:bg-muted/60 hover:border-border/60"
+                : "bg-background border-border/40 hover:border-border/60"
             )}
           >
             {filter.label}
