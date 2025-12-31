@@ -147,37 +147,41 @@ export function useMockWebSocket(
   useEffect(() => {
     if (!enabled) return;
 
-    // Simulate price updates every 1-3 seconds
-    const updatePrices = () => {
-      const updates: Record<string, { price: number; previousPrice: number }> = {};
-      
-      // Generate random price updates for demo
-      // In real app, this would come from WebSocket
-      const tokenIds = Array.from({ length: 10 }, (_, i) => `token-${i + 1}`);
-      
-      tokenIds.forEach((id) => {
-        const previousPrice = Math.random() * 100;
-        const changePercent = (Math.random() - 0.5) * 0.1; // ±5% change
-        const price = previousPrice * (1 + changePercent);
+    // Delay WebSocket initialization to improve initial load performance
+    const timeout = setTimeout(() => {
+      // Simulate price updates every 1-3 seconds
+      const updatePrices = () => {
+        const updates: Record<string, { price: number; previousPrice: number }> = {};
         
-        updates[id] = {
-          price: Number(price.toFixed(6)),
-          previousPrice: Number(previousPrice.toFixed(6)),
-        };
-      });
+        // Generate random price updates for demo
+        // In real app, this would come from WebSocket
+        const tokenIds = Array.from({ length: 10 }, (_, i) => `token-${i + 1}`);
+        
+        tokenIds.forEach((id) => {
+          const previousPrice = Math.random() * 100;
+          const changePercent = (Math.random() - 0.5) * 0.1; // ±5% change
+          const price = previousPrice * (1 + changePercent);
+          
+          updates[id] = {
+            price: Number(price.toFixed(6)),
+            previousPrice: Number(previousPrice.toFixed(6)),
+          };
+        });
 
-      // Use ref to avoid dependency issues
-      callbackRef.current(updates);
-    };
+        // Use ref to avoid dependency issues
+        callbackRef.current(updates);
+      };
 
-    // Initial update
-    updatePrices();
+      // Initial update
+      updatePrices();
 
-    // Set up interval - use fixed interval to prevent recreation
-    const interval = setInterval(updatePrices, 2000);
-    intervalRef.current = interval;
+      // Set up interval - use fixed interval to prevent recreation
+      const interval = setInterval(updatePrices, 2000);
+      intervalRef.current = interval;
+    }, 2000); // Delay 2 seconds for better initial load performance
 
     return () => {
+      clearTimeout(timeout);
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
