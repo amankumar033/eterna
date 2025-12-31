@@ -14,6 +14,8 @@ export const makeStore = () => {
           ignoredActions: ["tokenTable/updatePrices"],
         },
       }),
+    // Disable devTools in production for better performance
+    devTools: process.env.NODE_ENV !== "production",
   });
 };
 
