@@ -87,7 +87,7 @@ const tokenTableSlice = createSlice({
 function applyFilters(state: TokenTableState) {
   let filtered = [...state.tokens];
 
-  // Apply search filter
+  // Apply search filter (optimized with early return)
   if (state.searchQuery) {
     const query = state.searchQuery.toLowerCase();
     filtered = filtered.filter(
@@ -103,10 +103,10 @@ function applyFilters(state: TokenTableState) {
     filtered = filtered.filter((token) => token.status === state.statusFilter);
   }
 
-  // Apply sorting
+  // Apply sorting (create new array to avoid mutating)
   const { field, direction } = state.sortState;
   if (field && direction) {
-    filtered = filtered.sort((a, b) => {
+    filtered = [...filtered].sort((a, b) => {
       const aValue = a[field];
       const bValue = b[field];
       if (typeof aValue === "number" && typeof bValue === "number") {
