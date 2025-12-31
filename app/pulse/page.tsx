@@ -1,11 +1,20 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { TokenTable } from "@/components/token-table/TokenTable";
+import dynamic from "next/dynamic";
 import { TokenTableFilters } from "@/components/token-table/TokenTableFilters";
 import { ErrorBoundary } from "@/components/error-boundary/ErrorBoundary";
 import { TokenTableSkeleton } from "@/components/token-table/TokenTableSkeleton";
-import { TrendingUp, Zap } from "lucide-react";
+import { TrendingUp } from "lucide-react";
+
+// Lazy-load TokenTable to improve initial load performance
+const TokenTable = dynamic(
+  () => import("@/components/token-table/TokenTable").then((mod) => ({ default: mod.TokenTable })),
+  {
+    ssr: false,
+    loading: () => <TokenTableSkeleton rows={10} columns={8} />,
+  }
+);
 
 /**
  * Pulse page - Token discovery table
