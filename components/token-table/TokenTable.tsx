@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect, useCallback, useRef } from "react";
+import React, { memo, useEffect, useCallback, useRef, useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -41,6 +41,8 @@ interface TokenTableProps {
  * Main token trading table component
  * Displays tokens with real-time price updates, sorting, and filtering
  */
+const INITIAL_ROWS = 20; // Reduce initial render for better performance
+
 export const TokenTable = memo(function TokenTable({
   className,
 }: TokenTableProps) {
@@ -49,6 +51,7 @@ export const TokenTable = memo(function TokenTable({
     (state) => state.tokenTable
   );
   const { refetch } = useTokenData();
+  const [visibleRows, setVisibleRows] = useState(INITIAL_ROWS);
 
   // Memoize the price update callback to prevent infinite loops
   const handlePriceUpdate = useCallback(
@@ -62,8 +65,36 @@ export const TokenTable = memo(function TokenTable({
     [dispatch]
   );
 
-  // Set up WebSocket for real-time price updates
+  // Set up WebSocket for real-time price updates (delayed initialization)
   useMockWebSocket(handlePriceUpdate, true);
+
+  // Memoize visible tokens to prevent unnecessary re-renders
+  const visibleTokens = useMemo(() => {
+    return filteredTokens.slice(0, visibleRows);
+  }, [filteredTokens, visibleRows]);
+
+  // Load more rows after initial render using requestIdleCallback
+  useEffect(() => {
+    if (filteredTokens.length <= INITIAL_ROWS) {
+      setVisibleRows(filteredTokens.length);
+      return;
+    }
+
+    const loadMore = () => {
+      if (visibleRows < filteredTokens.length) {
+        setVisibleRows(filteredTokens.length);
+      }
+    };
+
+    // Use requestIdleCallback if available, otherwise use setTimeout
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const idleCallback = requestIdleCallback(loadMore, { timeout: 2000 });
+      return () => cancelIdleCallback(idleCallback);
+    } else {
+      const timeout = setTimeout(loadMore, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [filteredTokens.length, visibleRows]);
 
   // Clear error after 5 seconds if it exists - use ref to prevent loops
   const errorClearedRef = useRef(false);
@@ -171,7 +202,7 @@ export const TokenTable = memo(function TokenTable({
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredTokens.map((token, index) => (
+                visibleTokens.map((token, index) => (
                   <TokenRow key={token.id} token={token} columns={COLUMNS} index={index} />
                 ))
               )}
