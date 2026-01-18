@@ -84,24 +84,28 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Smooth transitions for all interactive elements */
+/* Optimized transitions - only composited properties */
 * {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: opacity, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
 }
 
-/* Softer, smoother interactions */
-button, a, [role="button"] {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Color transitions only for interactive elements */
+button, a, [role="button"], input, select, textarea {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+  will-change: transform;
 }
 
+/* Optimize hover states with composited transforms */
 button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) translateZ(0);
 }
 
 button:active {
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0);
 }
 
 /* Ensure smooth scrolling and interactions */
@@ -121,80 +125,84 @@ input, textarea, select {
   cursor: text;
 }
 
-/* Enhanced smooth animations - from cell position */
+/* Enhanced smooth animations - optimized for compositing */
 @keyframes cellFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.98) translateZ(0);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateZ(0);
   }
 }
 
 @keyframes cellSlideIn {
   from {
     opacity: 0;
-    transform: translateX(0) scale(0.98);
+    transform: translateX(0) scale(0.98) translateZ(0);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateX(0) scale(1) translateZ(0);
   }
 }
 
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.95) translateZ(0);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateZ(0);
   }
 }
 
 .animate-fade-in {
-  animation: cellFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Disabled to reduce TBT - animations cause long tasks */
+  /* animation: cellFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform; */
 }
 
 .animate-slide-in {
   animation: cellSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .animate-scale-in {
   animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
-/* Smooth transitions for price changes */
+/* Optimized price change animations - using opacity instead of background-color */
 @keyframes price-up {
   0% {
-    background-color: transparent;
-    transform: scale(1);
+    opacity: 1;
+    transform: scale(1) translateZ(0);
   }
   50% {
-    background-color: rgba(34, 197, 94, 0.2);
-    transform: scale(1.05);
+    opacity: 0.9;
+    transform: scale(1.02) translateZ(0);
   }
   100% {
-    background-color: transparent;
-    transform: scale(1);
+    opacity: 1;
+    transform: scale(1) translateZ(0);
   }
 }
 
 @keyframes price-down {
   0% {
-    background-color: transparent;
-    transform: scale(1);
+    opacity: 1;
+    transform: scale(1) translateZ(0);
   }
   50% {
-    background-color: rgba(239, 68, 68, 0.2);
-    transform: scale(1.05);
+    opacity: 0.9;
+    transform: scale(1.02) translateZ(0);
   }
   100% {
-    background-color: transparent;
-    transform: scale(1);
+    opacity: 1;
+    transform: scale(1) translateZ(0);
   }
 }
 
@@ -208,11 +216,13 @@ input, textarea, select {
 }
 
 .price-update-up {
-  animation: price-up 0.6s ease-in-out;
+  animation: price-up 0.4s ease-in-out;
+  will-change: opacity, transform;
 }
 
 .price-update-down {
-  animation: price-down 0.6s ease-in-out;
+  animation: price-down 0.4s ease-in-out;
+  will-change: opacity, transform;
 }
 
 /* Smooth scrollbar */

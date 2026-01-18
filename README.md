@@ -20,6 +20,39 @@ A pixel-perfect replica of Axiom Trade's token discovery table built with Next.j
 - **Performance Optimized**: Memoized components, <100ms interactions
 - **Atomic Architecture**: Reusable components, custom hooks, shared utilities
 
+## 🚦 Lighthouse Performance
+
+**Desktop**
+![Lighthouse Desktop](./screenshots/lighthouse-desktop.png)
+
+**Mobile**
+![Lighthouse Mobile](./screenshots/lighthouse-mobile.png)
+
+## 🎯 Visual Regression Testing
+
+Visual regression testing was performed using **Playwright**.
+
+- Tool: Playwright Screenshot Diff
+- Tolerance: ≤ 2px
+- Result: ✅ PASS
+
+![Visual Regression](./visual-regression-pass.png)
+
+## 📱 Responsive Layout Snapshots
+
+### Mobile (320px)
+![Mobile 320px](./mobile.png)
+
+### Tablet (768px)
+![Tablet 768px](./tablet.png)
+
+### Desktop (1024px)
+![Desktop 1024px](./desktop.png)
+
+### Large Desktop (1600px+)
+![Desktop 1600px](./desktop.png)
+
+
 ## 📁 Project Structure
 
 ```

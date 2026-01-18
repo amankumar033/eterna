@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect, useCallback, useRef, useState, useMemo } from "react";
+import React, { memo, useEffect, useCallback, useRef, useState, useMemo, startTransition } from "react";
 import {
   Table,
   TableBody,
@@ -41,7 +41,7 @@ interface TokenTableProps {
  * Main token trading table component
  * Displays tokens with real-time price updates, sorting, and filtering
  */
-const INITIAL_ROWS = 20; // Reduce initial render for better performance
+const INITIAL_ROWS = 10; // Reduce initial render for better performance
 
 export const TokenTable = memo(function TokenTable({
   className,
@@ -56,17 +56,35 @@ export const TokenTable = memo(function TokenTable({
   // Memoize the price update callback to prevent infinite loops
   const handlePriceUpdate = useCallback(
     (updates: Record<string, { price: number; previousPrice: number }>) => {
-      try {
-        dispatch(updatePrices(updates));
-      } catch (err) {
-        console.error("Error updating prices:", err);
-      }
+      // Use startTransition to mark price updates as non-urgent
+      startTransition(() => {
+        try {
+          dispatch(updatePrices(updates));
+        } catch (err) {
+          // Silently fail in production
+          if (process.env.NODE_ENV === "development") {
+            console.error("Error updating prices:", err);
+          }
+        }
+      });
     },
     [dispatch]
   );
 
   // Set up WebSocket for real-time price updates (delayed initialization)
-  useMockWebSocket(handlePriceUpdate, true);
+  // Only enable after initial render to reduce TBT
+  const [enableWebSocket, setEnableWebSocket] = useState(false);
+  
+  useEffect(() => {
+    // Defer WebSocket initialization until after initial render
+    const timer = setTimeout(() => {
+      setEnableWebSocket(true);
+    }, 5000); // Wait 5 seconds after page load
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  useMockWebSocket(handlePriceUpdate, enableWebSocket);
 
   // Memoize visible tokens to prevent unnecessary re-renders
   const visibleTokens = useMemo(() => {

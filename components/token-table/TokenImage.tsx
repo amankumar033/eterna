@@ -70,12 +70,12 @@ export function TokenImage({ symbol, className, size = 32 }: TokenImageProps) {
     <div className={cn("relative rounded-full overflow-hidden flex-shrink-0 ring-1 ring-border/20", className)}>
       <Image
         src={imageUrl}
-        alt={symbol}
+        alt={`${symbol} token logo`}
         width={size}
         height={size}
-        className="object-cover transition-transform duration-200 hover:scale-105"
+        className="object-cover transition-transform duration-200 hover:scale-105 will-change-transform"
         onError={() => setImageError(true)}
-        unoptimized
+        loading="lazy"
       />
     </div>
   );

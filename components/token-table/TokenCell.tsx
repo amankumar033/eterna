@@ -47,7 +47,7 @@ export const TokenCell = memo(function TokenCell({
       case "token":
         return (
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-[120px] sm:min-w-[150px] group/token">
-            <div className="relative h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 transition-transform duration-200 group-hover/token:scale-105">
+            <div className="relative h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 transition-transform duration-200 group-hover/token:scale-105 will-change-transform">
               <TokenImage symbol={token.symbol} size={40} />
             </div>
             <div className="flex flex-col min-w-0">
@@ -97,6 +97,7 @@ export const TokenCell = memo(function TokenCell({
                   isNegative && "text-red-600 dark:text-red-400",
                   !isPositive && !isNegative && "text-muted-foreground"
                 )}
+                aria-label={`24h price change: ${isPositive ? "+" : ""}${priceChange.toFixed(2)}%`}
               >
                 {isPositive ? "+" : ""}
                 {priceChange.toFixed(2)}%
@@ -153,9 +154,10 @@ export const TokenCell = memo(function TokenCell({
             <PopoverTrigger asChild>
               <button
                 className={cn(
-                  "font-mono text-sm transition-all duration-300 hover:underline cursor-pointer",
-                  "hover:scale-105 active:scale-95"
+                  "font-mono text-sm transition-transform duration-300 hover:underline cursor-pointer",
+                  "hover:scale-105 active:scale-95 will-change-transform"
                 )}
+                aria-label={`5 minute volume: ${formatCurrency(token.volume5m, { symbol: "$", decimals: 0 })}`}
               >
                 {formatCurrency(token.volume5m, { symbol: "$", decimals: 0 })}
               </button>
@@ -251,6 +253,7 @@ export const TokenCell = memo(function TokenCell({
                       );
                     }}
                     className="h-8 w-8 p-0 hover:bg-muted/60 hover:text-primary transition-all duration-300 ease-out cursor-pointer"
+                    aria-label={`View ${token.symbol} on Solscan`}
                   >
                     <ExternalLink className="h-4 w-4" />
                   </Button>

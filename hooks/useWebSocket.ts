@@ -147,41 +147,64 @@ export function useMockWebSocket(
   useEffect(() => {
     if (!enabled) return;
 
+    // Batch updates using requestAnimationFrame to reduce main-thread work
+    let pendingUpdates: Record<string, { price: number; previousPrice: number }> | null = null;
+    let rafId: number | null = null;
+    let initialTimeout: NodeJS.Timeout | null = null;
+
+    const flushUpdates = () => {
+      if (pendingUpdates && Object.keys(pendingUpdates).length > 0) {
+        callbackRef.current(pendingUpdates);
+        pendingUpdates = null;
+      }
+      rafId = null;
+    };
+
+    // Simulate price updates every 2-3 seconds (less frequent for better performance)
+    const updatePrices = () => {
+      const updates: Record<string, { price: number; previousPrice: number }> = {};
+      
+      // Generate random price updates for demo - limit to 5 tokens per update
+      // In real app, this would come from WebSocket
+      const tokenIds = Array.from({ length: 5 }, (_, i) => `token-${Math.floor(Math.random() * 50) + 1}`);
+      
+      tokenIds.forEach((id) => {
+        const previousPrice = Math.random() * 100;
+        const changePercent = (Math.random() - 0.5) * 0.05; // ±2.5% change (reduced)
+        const price = previousPrice * (1 + changePercent);
+        
+        updates[id] = {
+          price: Number(price.toFixed(6)),
+          previousPrice: Number(previousPrice.toFixed(6)),
+        };
+      });
+
+      // Batch updates using requestAnimationFrame
+      pendingUpdates = { ...pendingUpdates, ...updates };
+      
+      if (!rafId) {
+        rafId = requestAnimationFrame(flushUpdates);
+      }
+    };
+
     // Delay WebSocket initialization to improve initial load performance
     const timeout = setTimeout(() => {
-      // Simulate price updates every 1-3 seconds
-      const updatePrices = () => {
-        const updates: Record<string, { price: number; previousPrice: number }> = {};
-        
-        // Generate random price updates for demo
-        // In real app, this would come from WebSocket
-        const tokenIds = Array.from({ length: 10 }, (_, i) => `token-${i + 1}`);
-        
-        tokenIds.forEach((id) => {
-          const previousPrice = Math.random() * 100;
-          const changePercent = (Math.random() - 0.5) * 0.1; // ±5% change
-          const price = previousPrice * (1 + changePercent);
-          
-          updates[id] = {
-            price: Number(price.toFixed(6)),
-            previousPrice: Number(previousPrice.toFixed(6)),
-          };
-        });
+      // Initial update (delayed)
+      initialTimeout = setTimeout(updatePrices, 1000);
 
-        // Use ref to avoid dependency issues
-        callbackRef.current(updates);
-      };
-
-      // Initial update
-      updatePrices();
-
-      // Set up interval - use fixed interval to prevent recreation
-      const interval = setInterval(updatePrices, 2000);
+      // Set up interval - less frequent updates for better performance
+      const interval = setInterval(updatePrices, 3000); // Increased from 2000ms to 3000ms
       intervalRef.current = interval;
-    }, 2000); // Delay 2 seconds for better initial load performance
+    }, 3000); // Delay 3 seconds for better initial load performance
 
     return () => {
       clearTimeout(timeout);
+      if (initialTimeout) {
+        clearTimeout(initialTimeout);
+      }
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;

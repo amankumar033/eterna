@@ -52,6 +52,7 @@ export const TableHeaderCell = memo(function TableHeaderCell({
           sortDirection && "text-primary bg-muted/30"
         )}
         onClick={() => handleSort(column.sortField)}
+        aria-label={`Sort by ${column.label} ${sortDirection === "asc" ? "ascending" : sortDirection === "desc" ? "descending" : ""}`}
       >
         <span className="hidden sm:inline">{column.label}</span>
         <span className="sm:hidden">{column.label.split(" ")[0]}</span>

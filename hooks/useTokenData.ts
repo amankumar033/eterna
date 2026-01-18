@@ -48,11 +48,12 @@ function generateMockTokens(count = 50): Token[] {
  * Fetch token data with React Query
  */
 async function fetchTokens(): Promise<Token[]> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500 + Math.random() * 1000));
+  // Simulate API delay - reduced for faster initial load
+  await new Promise((resolve) => setTimeout(resolve, 200 + Math.random() * 300));
   
   // In production, replace with actual API call
-  return generateMockTokens(50);
+  // Reduced initial load to 30 tokens for better performance
+  return generateMockTokens(30);
 }
 
 /**
@@ -73,7 +74,8 @@ export function useTokenData() {
     queryKey: ["tokens"],
     queryFn: fetchTokens,
     staleTime: 30000, // 30 seconds
-    refetchInterval: 60000, // Refetch every minute
+    refetchInterval: false, // Disable auto-refetch to reduce main-thread work
+    gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
   });
 
   // Sync with Redux - use refs to prevent infinite loops

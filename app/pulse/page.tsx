@@ -1,18 +1,32 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, startTransition } from "react";
 import dynamic from "next/dynamic";
-import { TokenTableFilters } from "@/components/token-table/TokenTableFilters";
 import { ErrorBoundary } from "@/components/error-boundary/ErrorBoundary";
 import { TokenTableSkeleton } from "@/components/token-table/TokenTableSkeleton";
-import { TrendingUp } from "lucide-react";
 
-// Lazy-load TokenTable to improve initial load performance
+// Lazy-load all heavy components to reduce initial bundle
 const TokenTable = dynamic(
   () => import("@/components/token-table/TokenTable").then((mod) => ({ default: mod.TokenTable })),
   {
     ssr: false,
     loading: () => <TokenTableSkeleton rows={10} columns={8} />,
+  }
+);
+
+const TokenTableFilters = dynamic(
+  () => import("@/components/token-table/TokenTableFilters").then((mod) => ({ default: mod.TokenTableFilters })),
+  {
+    ssr: false,
+    loading: () => <div className="h-16 animate-pulse bg-muted/20 rounded-lg" />,
+  }
+);
+
+const TrendingUp = dynamic(
+  () => import("lucide-react").then((mod) => ({ default: mod.TrendingUp })),
+  {
+    ssr: false,
+    loading: () => <div className="h-5 w-5 bg-muted/20 rounded animate-pulse" />,
   }
 );
 
@@ -24,7 +38,7 @@ const TokenTable = dynamic(
 export default function PulsePage() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-3 sm:px-6 py-6 sm:py-10 max-w-[1600px]">
+      <main className="container mx-auto px-3 sm:px-6 py-6 sm:py-10 max-w-[1600px]">
         <div className="space-y-6 sm:space-y-8">
           {/* Header */}
           <div className="space-y-2">
@@ -55,7 +69,7 @@ export default function PulsePage() {
             </Suspense>
           </ErrorBoundary>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

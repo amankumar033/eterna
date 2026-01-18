@@ -18,3 +18,5 @@ All images should be:
 - Square aspect ratio (recommended: 64x64 or 128x128)
 - Transparent background preferred
 
+
+
