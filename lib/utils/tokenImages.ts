@@ -24,3 +24,5 @@ export function getTokenImage(symbol: string): string {
   return TOKEN_IMAGES[lowerSymbol] || `/tokens/default.png`;
 }
 
+
+
