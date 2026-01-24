@@ -15,7 +15,10 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-  display:
+  display: "swap",
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: "Axiom Trade - Token Discovery",
   description: "Discover and track the latest tokens with real-time price updates",
