@@ -3,11 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/lib/providers/ReduxProvider";
 import QueryProvider from "@/lib/providers/QueryProvider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+import { 
   display: "swap",
   preload: true,
 });
